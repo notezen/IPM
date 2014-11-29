@@ -9,8 +9,7 @@ find_package( Boost COMPONENTS thread filesystem date_time REQUIRED )
 find_package( Threads )
 
 include_directories( "./src" 
-                     ${ROOT}/3dparty/lua-5.1.5/src 
-                     ${ROOT}/3dparty/lua-5.1.5/etc 
+                     ${LUA_INCLUDE_DIR} 
                      ${Boost_INCLUDE_DIRS} 
                      ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -21,7 +20,7 @@ message( STATUS "HEADERS = ${headers}" )
 message( STATUS ${Boost_LIBRARIES} )
 
 add_library( peer_abst STATIC ${src} )
-target_link_libraries( peer_abst liblua-5.1.5 ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${QT_LIBRARIES} )
+target_link_libraries( peer_abst ${LUA_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} ${QT_LIBRARIES} )
 
 
 

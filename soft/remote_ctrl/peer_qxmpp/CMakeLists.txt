@@ -13,8 +13,7 @@ find_package( Threads )
 
 include_directories( "./src" 
                      "${ROOT}/peer_abst/src" 
-                     ${ROOT}/3dparty/lua-5.1.5/src 
-                     ${ROOT}/3dparty/lua-5.1.5/etc 
+                     ${LUA_INCLUDE_DIR}
                      ${ROOT}/3dparty/qxmpp-0.7.4/src/base 
                      ${ROOT}/3dparty/qxmpp-0.7.4/src/client 
                      ${ROOT}/3dparty/qxmpp-0.7.4/src/server 
@@ -38,7 +37,7 @@ QT4_ADD_RESOURCES( qrcSrc ${qrc} )
 set( src ${src} ${qrcSrc} )
 
 add_library( peer_qxmpp STATIC ${src} )
-set( libs peer_abst liblua-5.1.5 qxmpp )
+set( libs peer_abst ${LUA_LIBRARIES} qxmpp )
 message( STATUS "LIBS0 = ${libs}" )
 set( libs ${libs} ${QT_LIBRARIES} ${CMAKE_THREAD_LIBS_INIT} ${Boost_LIBRARIES} )
 message( STATUS "LIBS1 = ${libs}" )

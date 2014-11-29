@@ -22,10 +22,9 @@ include_directories( "./src"
                      "${ROOT}/peer_abst/src" 
                      "${ROOT}/peer_qxmpp/src" 
                      "${ROOT}/luajoyctrl/src"
-                     "${ROOT}/3dparty/lua-5.1.5/src"
-                     "${ROOT}/3dparty/lua-5.1.5/etc"  
+			${LUA_INCLUDE_DIR}
                      "${ROOT}/3dparty/qtlua-1.4/src" 
-                     "${ROOT}/3dparty/qwt-6.0.1/src" 
+                     #"${ROOT}/3dparty/qwt-6.0.1/src" 
                      "${ROOT}/3dparty/widgets/src" 
                      ${Boost_INCLUDE_DIRS}
                      ${CMAKE_CURRENT_BINARY_DIR} )
@@ -61,7 +60,7 @@ else ( WIN32 )
 endif ( WIN32 )
 
 add_executable( app_client ${BUILD_TYPE} ${src} )
-set( libs peer_qxmpp liblua-5.1.5 luajoyctrl qtlua widgets )
+set( libs peer_qxmpp ${LUA_LIBRARIES} luajoyctrl qtlua widgets )
 if ( WIN32 )
     set( libs ${libs} libvlc.lib )
 elseif ( UNIX )

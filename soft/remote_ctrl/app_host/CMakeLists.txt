@@ -15,8 +15,7 @@ include_directories( "./src"
                      "${ROOT}/peer_abst/src" 
                      "${ROOT}/peer_qxmpp/src"
                      "${ROOT}/luamcuctrl/src"   
-                     ${ROOT}/3dparty/lua-5.1.5/src  
-                     ${ROOT}/3dparty/lua-5.1.5/etc 
+                     ${LUA_INCLUDE_DIR} 
                      ${Boost_INCLUDE_DIRS} 
                      ${CMAKE_CURRENT_BINARY_DIR} )
 
@@ -37,14 +36,12 @@ QT4_ADD_RESOURCES( qrcSrc ${qrc} )
 set( src ${src} ${qrcSrc} )
 
 add_executable( app_host ${src} )
-set( libs liblua-5.1.5 
+set( libs ${LUA_LIBRARIES}
           peer_qxmpp 
-          luamcuctrl 
-          liblua-5.1.5 
+          luamcuctrl
           ${QT_LIBRARIES} 
           ${CMAKE_THREAD_LIBS_INIT} 
-          ${Boost_LIBRARIES} 
-          liblua-5.1.5 )
+          ${Boost_LIBRARIES} )
 target_link_libraries( app_host ${libs} )
 install( TARGETS app_host DESTINATION "./" )
 install( DIRECTORY "./src_lua/" DESTINATION "./" )

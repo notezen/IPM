@@ -1,6 +1,6 @@
 
 include_directories( "./" 
-                     "${ROOT}/3dparty/lua-5.1.5/src" )
+                     ${LUA_INCLUDE_DIR} )
 
 file( GLOB src     "./*.c" )
 message( STATUS "Project \"bit\"" )
@@ -16,7 +16,7 @@ add_library( bit SHARED ${src} )
 set_property( TARGET bit PROPERTY COMPILE_DEFINITIONS ${defs} )
 set_property( TARGET bit PROPERTY OUTPUT_NAME "bit" )
 set_target_properties( bit PROPERTIES PREFIX "" )
-target_link_libraries( bit liblua-5.1.5 )
+target_link_libraries( bit ${LUA_LIBRARIES} )
 
 install( TARGETS bit DESTINATION "./" )
 

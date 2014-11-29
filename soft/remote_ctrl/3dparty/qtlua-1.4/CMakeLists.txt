@@ -19,11 +19,8 @@
 
 # Find Lua 
 	#FIND_PACKAGE (Lua51 REQUIRED)
-	#INCLUDE_DIRECTORIES (${LUA_INCLUDE_DIR})	
-        set( LUA_LIBRARIES   liblua-5.1.5 )
-        set( LUA_INCLUDE_DIR ${ROOT}/3dparty/lua-5.1.5/src )
+	INCLUDE_DIRECTORIES (${LUA_INCLUDE_DIR})	
         set( CMAKE_INSTALL_PREFIX ./app )
-        include_directories( ${LUA_INCLUDE_DIR} )
         add_definitions( -DHAVE_LUA_PACKAGELIB 
                          -DHAVE_LUA_OSLIB 
                          -DHAVE_LUA_OPENLIBS )

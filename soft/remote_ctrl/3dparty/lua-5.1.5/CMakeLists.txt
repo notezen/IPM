@@ -2,6 +2,7 @@
 if ( UNIX )
     # To be able to load binary modules as shared libraries.
     add_definitions( -DLUA_DL_DLOPEN )
+  SET( CMAKE_C_FLAGS  "${CMAKE_C_FLAGS} -fPIC" ) 
 endif ( UNIX )
 
 add_library( liblua-5.1.5  STATIC 

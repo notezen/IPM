@@ -1,8 +1,16 @@
-
 cmake_minimum_required( VERSION 2.6 )
 project( "ircio" )
 set( ROOT ${CMAKE_CURRENT_SOURCE_DIR} )
 set( CMAKE_INSTALL_PREFIX ${ROOT}/build.app )
+
+FIND_PACKAGE (Lua51)
+if (NOT LUA51_FOUND)
+  set( LUA_LIBRARIES   liblua-5.1.5 )
+  set( LUA_INCLUDE_DIR ${ROOT}/3dparty/lua-5.1.5/src ${ROOT}/3dparty/lua-5.1.5/etc )
+  add_subdirectory( "./3dparty/lua-5.1.5" )
+  add_subdirectory( "./3dparty/luabitop-1.0.2" )
+endif (NOT LUA51_FOUND)
+
 if ( WIN32 )
     include( "./config-win.cmake" )
 endif ( WIN32 )
