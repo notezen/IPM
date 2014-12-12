@@ -8,9 +8,9 @@
 #include "luajoyctrl.h"
 
 const std::string MainWnd::CLIENT_CONFIG_FILE = "client.ini";
-const std::string MainWnd::SERVER_CONFIG_FILE = "server.ini";
 const int         MainWnd::LOG_MAX     = 256;
 const QString     MainWnd::VIDEO_CONFIG_FILE  = "video.ini";
+const QString MainWnd::VIDEO_DEFAULT_ADDR = "rtsp://192.0.0.35:554";
 
 MainWnd::MainWnd( QWidget * parent )
 : QMainWindow( parent )
@@ -37,9 +37,8 @@ MainWnd::MainWnd( QWidget * parent )
     ui.joy2->setBackgroundColor2( QColor( qRgb( 0xac, 0x86, 0x00 ) ) );
     ui.joy2->setEffectColor( QColor( qRgb( 0x39, 0xba, 0x00 ) ) );
 
-    m_valveTst = new ValveTst( 0 );
+    m_valveTst = new ValveTst(this);
 
-    //connect( ui.image,   SIGNAL(triggered()), this,       SLOT(slotImage()) );
     connect( ui.image,   SIGNAL(triggered()), this,       SLOT(slotVideo()) );
     connect( ui.connect, SIGNAL(triggered()), this,       SLOT(slotConnect()) );
     connect( ui.exec,    SIGNAL(triggered()), this,       SLOT(slotExec()) );
@@ -48,11 +47,8 @@ MainWnd::MainWnd( QWidget * parent )
     connect( ui.valve,   SIGNAL(triggered()), m_valveTst, SLOT(show()) );
 
     m_peer = new PeerQxmpp( CLIENT_CONFIG_FILE, boost::bind( &MainWnd::init, this, _1 ) );
-    //m_peer->setInFileHandler( boost::bind<QIODevice *>( &MainWnd::inFileHandler, this, _1 ) );
-    //m_peer->setAccFileHandler( boost::bind( &MainWnd::accFileHandler, this, _1, _2 ) );
 
-    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    m_videoUrl = s.value( "url", "rtsp://192.168.0.64:8000" ).toString();
+    slotVideo();
 }
 
 MainWnd::~MainWnd()
@@ -61,11 +57,166 @@ MainWnd::~MainWnd()
     delete m_peer;
 }
 
+// --------- SLOTS ------------
+
+void MainWnd::slotSend( const QString & stri )
+{
+    std::string sstri = stri.toStdString();
+    m_peer->send( sstri );
+}
+
 void MainWnd::slotLog( const QString & stri )
 {
     ui.console->print( stri );
     ui.console->print( "\n" );
 }
+
+void MainWnd::slotVideo()
+{
+    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
+    m_videoUrl = s.value( "url", VIDEO_DEFAULT_ADDR ).toString();
+    ui.view->playFile( m_videoUrl );
+}
+
+void MainWnd::slotConnect()
+{
+    m_peer->PeerQxmpp::connect();
+}
+
+void MainWnd::slotExec()
+{
+    QString stri =
+        QFileDialog::getOpenFileName( this, tr( "Open script file" ),
+                                                "",
+                                            tr("Lua script (*.lua)") );
+    if ( stri.length() > 0 )
+    {
+        std::ostringstream out;
+        out << "local ch, err = loadfile( \"";
+        out << stri.toStdString();
+        out << "\" )\n";
+        out << "if ( not ch ) then\n";
+        out << "    print( err )\n";
+        out << "else\n";
+        out << "    ch()\n";
+        out << "end";
+        m_peer->invokeCmd( out.str() );
+    }
+}
+
+void MainWnd::slotSendFile()
+{
+    QString stri =
+        QFileDialog::getOpenFileName( this, tr( "Open script file" ),
+                                                "",
+                                            tr("Lua script (*.lua)") );
+    if ( stri.length() > 0 )
+    {
+        QFile * f = new QFile( stri );
+        if ( !f->open( QIODevice::ReadOnly ) )
+        {
+            QMessageBox::critical( this, "Error", "Can\'t open file for reading" );
+            return;
+        }
+        QFileInfo fi( stri );
+        QString name = fi.fileName();
+        m_peer->sendFile( name.toStdString(), f );
+    }
+}
+
+void MainWnd::slotHelp()
+{
+    QDesktopServices::openUrl( QUrl( "help\\index.html" ) );
+}
+
+void MainWnd::slotJoyChanged( QPointF v, bool mouseDown )
+{
+    AnalogPad * ap = qobject_cast<AnalogPad *>( sender() );
+    if ( ap == ui.joy1 )
+    {
+        QMutexLocker lock( &mutex );
+        m_joy1 = v * 200.0;
+    }
+    else if ( ap == ui.joy2 )
+    {
+        QMutexLocker lock( &mutex );
+        m_joy2 = v * 200.0;
+    }
+    else if ( ap == ui.joy3 )
+    {
+        QMutexLocker lock( &mutex );
+        m_joy3 = v * 200.0;
+    }
+    else
+    {
+        QMutexLocker lock( &mutex );
+        m_joy4 = v * 200.0;
+    }
+
+}
+
+// ------------ EVENTS ------------
+
+void MainWnd::closeEvent( QCloseEvent *event)
+{
+    event->accept();
+
+    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
+    s.setValue( "url", m_videoUrl );
+}
+
+
+// ============== LUA =================
+
+ValveTst * MainWnd::valveTst()
+{
+    return m_valveTst;
+}
+
+int MainWnd::print( lua_State * L )
+{
+    int top = lua_gettop( L );
+    for ( int i=1; i<=top; i++ )
+    {
+        emit sigLog( QString::fromStdString( lua_tostring( L, i ) ) );
+    }
+    lua_settop( L, 0 );
+    return 0;
+}
+
+int MainWnd::joy( lua_State * L )
+{
+    int top = lua_gettop( L );
+    int index;
+    if ( top > 0 )
+        index = static_cast<int>( lua_tonumber( L, 1 ) );
+    else
+        index = 1;
+    QPointF at;
+    {
+        QMutexLocker lock( &mutex );
+        switch ( index )
+        {
+        case 2:
+            at = m_joy2;
+            break;
+        case 3:
+            at = m_joy3;
+            break;
+        case 4:
+            at = m_joy4;
+            break;
+        default:
+            at = m_joy1;
+            break;
+        }
+    }
+    lua_pushnumber( L, static_cast<lua_Number>( at.x() ) );
+    lua_pushnumber( L, static_cast<lua_Number>( at.y() ) );
+    //lua_settop( L, 0 );
+    return 2;
+}
+
 
 static int print( lua_State * L )
 {
@@ -153,170 +304,3 @@ void MainWnd::init( lua_State * L )
     // Execute file.
     luaL_dofile( L, "./client.lua" );
 }
-
-int MainWnd::print( lua_State * L )
-{
-    int top = lua_gettop( L );
-    for ( int i=1; i<=top; i++ )
-    {
-        std::string stri = lua_tostring( L, i );
-        log( stri );
-    }
-    lua_settop( L, 0 );
-    return 0;
-}
-
-int MainWnd::joy( lua_State * L )
-{
-    int top = lua_gettop( L );
-    int index;
-    if ( top > 0 )
-        index = static_cast<int>( lua_tonumber( L, 1 ) );
-    else
-        index = 1;
-    QPointF at;
-    {
-        QMutexLocker lock( &mutex );
-        switch ( index )
-        {
-        case 2:
-            at = m_joy2;
-            break;
-        case 3:
-            at = m_joy3;
-            break;
-        case 4:
-            at = m_joy4;
-            break;
-        default:
-            at = m_joy1;
-            break;
-        }
-    }
-    lua_pushnumber( L, static_cast<lua_Number>( at.x() ) );
-    lua_pushnumber( L, static_cast<lua_Number>( at.y() ) );
-    //lua_settop( L, 0 );
-    return 2;
-}
-
-ValveTst * MainWnd::valveTst()
-{
-    return m_valveTst;
-}
-
-void MainWnd::log( const std::string & stri )
-{
-    QString qstri = QString::fromStdString( stri );
-    emit sigLog( qstri );
-}
-
-void MainWnd::slotSend( const QString & stri )
-{
-    std::string sstri = stri.toStdString();
-    m_peer->send( sstri );
-}
-
-void MainWnd::slotImage()
-{
-    const std::string cmd = "image()";
-    m_peer->send( cmd );
-}
-
-void MainWnd::slotVideo()
-{
-    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    m_videoUrl = s.value( "url", "rtsp://192.168.0.64:8000" ).toString();
-    ui.view->playFile( m_videoUrl );
-}
-
-void MainWnd::slotConnect()
-{
-    m_peer->PeerQxmpp::connect();
-}
-
-void MainWnd::slotExec()
-{
-    QString stri =
-        QFileDialog::getOpenFileName( this, tr( "Open script file" ),
-                                                "",
-                                            tr("Lua script (*.lua)") );
-    if ( stri.length() > 0 )
-    {
-        std::ostringstream out;
-        out << "local ch, err = loadfile( \"";
-        out << stri.toStdString();
-        out << "\" )\n";
-        out << "if ( not ch ) then\n";
-        out << "    print( err )\n";
-        out << "else\n";
-        out << "    ch()\n";
-        out << "end";
-        m_peer->invokeCmd( out.str() );
-    }
-}
-
-void MainWnd::slotSendFile()
-{
-    QString stri =
-        QFileDialog::getOpenFileName( this, tr( "Open script file" ),
-                                                "",
-                                            tr("Lua script (*.lua)") );
-    if ( stri.length() > 0 )
-    {
-        QFile * f = new QFile( stri );
-        if ( !f->open( QIODevice::ReadOnly ) )
-        {
-            QMessageBox::critical( this, "Error", "Can\'t open file for reading" );
-            return;
-        }
-        QFileInfo fi( stri );
-        QString name = fi.fileName();
-        m_peer->sendFile( name.toStdString(), f );
-    }
-}
-
-void MainWnd::slotHelp()
-{
-    QDesktopServices::openUrl( QUrl( "help\\index.html" ) );
-}
-
-void MainWnd::slotJoyChanged( QPointF v, bool mouseDown )
-{
-    AnalogPad * ap = qobject_cast<AnalogPad *>( sender() );
-    if ( ap == ui.joy1 )
-    {
-        QMutexLocker lock( &mutex );
-        m_joy1 = v * 200.0;
-    }
-    else if ( ap == ui.joy2 )
-    {
-        QMutexLocker lock( &mutex );
-        m_joy2 = v * 200.0;
-    }
-    else if ( ap == ui.joy3 )
-    {
-        QMutexLocker lock( &mutex );
-        m_joy3 = v * 200.0;
-    }
-    else
-    {
-        QMutexLocker lock( &mutex );
-        m_joy4 = v * 200.0;
-    }
-
-}
-
-void MainWnd::showEvent( QShowEvent * )
-{
-    slotVideo();
-}
-
-void MainWnd::closeEvent( QCloseEvent * )
-{
-    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    s.setValue( "url", m_videoUrl );
-}
-
-
-
-

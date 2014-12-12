@@ -20,10 +20,12 @@ soft/firmware/i2ctest/build/lst/*
 soft/firmware/i2ctest/build/obj/*
 soft/firmware/tests/build
 soft/firmware/tests/build.app
+
 soft/remote_ctrl/build
 soft/remote_ctrl/build.app
 soft/remote_ctrl/build.eclipse
 soft/remote_ctrl/app
+soft/remote_ctrl/CMakeLists.txt.user
 _temp
 
 soft/firmware/moto1/.dep
@@ -63,9 +65,3 @@ soft/firmware/joystick/build/obj/*
 
 soft/opencv/build.app
 soft/opencv/build
-
-
-
-
-
-

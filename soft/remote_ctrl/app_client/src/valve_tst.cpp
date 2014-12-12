@@ -80,6 +80,8 @@ void ValveTst::clean()
     outsV.clear();
 }
 
+// ----------- for LUA --------------
+
 void ValveTst::setInputs( int boardInd, quint32 value )
 {
     emit sigSetInputs( boardInd, value );
@@ -95,6 +97,8 @@ quint32 ValveTst::outputs( int boardInd )
     QMutexLocker lock( &mutex );
     return outsV[ boardInd ];
 }
+
+// --------- SLOTS -------------
 
 void ValveTst::slotSetInputs( int boardInd, quint32 value )
 {
@@ -135,11 +139,3 @@ void ValveTst::slotOutChanged()
         outsV[j] = res;
     }
 }
-
-void ValveTst::slotApply()
-{
-}
-
-
-
-

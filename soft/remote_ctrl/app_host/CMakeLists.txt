@@ -43,8 +43,6 @@ set( libs ${LUA_LIBRARIES}
           ${CMAKE_THREAD_LIBS_INIT} 
           ${Boost_LIBRARIES} )
 target_link_libraries( app_host ${libs} )
-install( TARGETS app_host DESTINATION "./" )
-install( DIRECTORY "./src_lua/" DESTINATION "./" )
-
-
-
+install( TARGETS app_host DESTINATION "." )
+install( DIRECTORY "src_lua/" DESTINATION "." )
+install( DIRECTORY "etc/" DESTINATION "." )

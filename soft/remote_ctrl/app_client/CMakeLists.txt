@@ -18,14 +18,14 @@ find_package( Threads )
 include( ${ROOT}/3dparty/cmake/FindLIBVLC.cmake )
 
 include_directories( "./src" 
-                     "./src/analogpad" 
+                     "./src/3dparty" 
                      "${ROOT}/peer_abst/src" 
                      "${ROOT}/peer_qxmpp/src" 
                      "${ROOT}/luajoyctrl/src"
 			${LUA_INCLUDE_DIR}
                      "${ROOT}/3dparty/qtlua-1.4/src" 
                      #"${ROOT}/3dparty/qwt-6.0.1/src" 
-                     "${ROOT}/3dparty/widgets/src" 
+                     #"${ROOT}/3dparty/widgets/src" 
                      ${Boost_INCLUDE_DIRS}
                      ${CMAKE_CURRENT_BINARY_DIR} )
 if ( WIN32 )
@@ -36,10 +36,10 @@ file( GLOB src      "./src/*.cpp" )
 file( GLOB headers  "./src/*.h" )
 file( GLOB ui       "./src/*.ui" )
 file( GLOB qrc      "./src/*.qrc" )
-file( GLOB asrc     "./src/analogpad/*.cpp" )
-set( src ${src} ${asrc} )
-file( GLOB aheaders "./src/analogpad/*.h" )
-set( headers ${headers} ${aheaders} )
+file( GLOB extsrc     "./src/3dparty/*.cpp" )
+set( src ${src} ${extsrc} )
+file( GLOB extheaders "./src/3dparty/*.h" )
+set( headers ${headers} ${extheaders} )
 message( STATUS "SRC = ${src}" )
 message( STATUS "HEADERS = ${headers}" )
 
@@ -60,7 +60,7 @@ else ( WIN32 )
 endif ( WIN32 )
 
 add_executable( app_client ${BUILD_TYPE} ${src} )
-set( libs peer_qxmpp ${LUA_LIBRARIES} luajoyctrl qtlua widgets )
+set( libs peer_qxmpp ${LUA_LIBRARIES} luajoyctrl qtlua )
 if ( WIN32 )
     set( libs ${libs} libvlc.lib )
 elseif ( UNIX )
@@ -71,6 +71,6 @@ target_link_libraries( app_client ${libs}
                                   ${Boost_LIBRARIES}
                                   ${QT_LIBRARIES} )
 install( TARGETS app_client DESTINATION "." )
-install( DIRECTORY "./src_lua/" DESTINATION "." )
-install( DIRECTORY "./help" DESTINATION "." )
-
+install( DIRECTORY "src_lua/" DESTINATION "." )
+install( DIRECTORY "help" DESTINATION "." )
+install( DIRECTORY "etc/" DESTINATION "." )

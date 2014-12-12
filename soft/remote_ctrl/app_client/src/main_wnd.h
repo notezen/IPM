@@ -25,7 +25,6 @@ public:
     ValveTst * valveTst();
 private:
     void init( lua_State * L );
-    void log( const std::string & stri );
 
     Ui_MainWnd  ui;
     PeerQxmpp * m_peer;
@@ -35,16 +34,16 @@ private:
     ValveTst             * m_valveTst;
 
     static const std::string CLIENT_CONFIG_FILE;
-    static const std::string SERVER_CONFIG_FILE;
     static const int         LOG_MAX;
     static const QString     VIDEO_CONFIG_FILE;
+    static const QString     VIDEO_DEFAULT_ADDR;
+
     QString                  m_videoUrl;
 
     QMutex mutex;
     QPointF m_joy1, m_joy2, m_joy3, m_joy4;
 public slots:
     void slotSend( const QString & stri );
-    void slotImage();
     void slotVideo();
     void slotConnect();
     void slotExec();
@@ -53,13 +52,7 @@ public slots:
     void slotJoyChanged( QPointF v, bool mouseDown );
 
 protected:
-    void showEvent( QShowEvent * );
-    void closeEvent( QCloseEvent * );
+    void closeEvent(QCloseEvent *event);
 };
 
-
-
 #endif
-
-
-

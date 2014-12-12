@@ -30,7 +30,6 @@ public slots:
     void slotSetOutputs( int boardInd, quint32 value );
 
     void slotOutChanged();
-    void slotApply();
 private:
     QGridLayout          * lt;
     QList<Led *>         ins;
@@ -40,10 +39,4 @@ private:
     QVector<quint32>     outsV;
 };
 
-
-
-
 #endif
-
-
-
