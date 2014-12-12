@@ -14,14 +14,6 @@
    <string>Remote control</string>
   </property>
   <widget class="CameraWnd" name="view">
-   <layout class="QVBoxLayout" name="verticalLayout">
-    <property name="spacing">
-     <number>1</number>
-    </property>
-    <property name="margin">
-     <number>1</number>
-    </property>
-   </layout>
   </widget>
   <widget class="QDockWidget" name="cmdDw">
    <property name="sizePolicy">
