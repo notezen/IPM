@@ -14,9 +14,10 @@ find_package( Threads )
 include_directories( "./src" 
                      "${ROOT}/peer_abst/src" 
                      ${LUA_INCLUDE_DIR}
-                     ${ROOT}/3dparty/qxmpp-0.7.4/src/base 
-                     ${ROOT}/3dparty/qxmpp-0.7.4/src/client 
-                     ${ROOT}/3dparty/qxmpp-0.7.4/src/server 
+                     #${ROOT}/3dparty/qxmpp-0.7.4/src/base
+                     #${ROOT}/3dparty/qxmpp-0.7.4/src/client
+                     #${ROOT}/3dparty/qxmpp-0.7.4/src/server
+                     /usr/include/qxmpp
                      ${Boost_INCLUDE_DIRS} 
                      ${CMAKE_CURRENT_BINARY_DIR} )
 

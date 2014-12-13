@@ -1,0 +1,22 @@
+Build deps
+==========
+
+cmake
+libqt4-dev
+libboost-filesystem-dev libboost-regex-dev libboost-thread-dev
+libusb-1.0-0-dev
+libvlc-dev
+liblua5.1-0-dev
+libqxmpp-dev
+
+
+Runtime deps
+============
+
+vlc
+liblua5.1-0
+lua-bitop
+libqtgui4
+libqxmpp
+libboost-filesystem1.49.0 libboost-regex1.49.0 libboost-thread1.49.0
+libusb-1.0-0
