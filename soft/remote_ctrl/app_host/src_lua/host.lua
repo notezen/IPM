@@ -209,21 +209,6 @@ function sleep( sec )
     end
 end
 
-function image( w, h )
-    print( "image entered" )
-    client = true
-    if ( not imgProc ) then
-        imgProc = luafsw.create()
-        imgProc:setPeer( peer() )
-    end
-    if ( imgProc:isRunning() ) then
-        send( "print( \"Pending image is in process. Another image capture is possible only after finishing current one.\" )" )
-    else
-        imgProc:start()
-    end
-    print( "image left" )
-end
-
 function valveTest( tOn, tOff, cnt )
     local vOn  = { 1, 0, 0 }
     local vOff = { 0, 0, 0 }

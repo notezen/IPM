@@ -1,7 +1,7 @@
 
 find_package( Qt4 )
 set( QT_USE_QTCORE     True )
-set( QT_USE_QTGUI      True )
+#set( QT_USE_QTGUI      True )
 set( QT_USE_QTNETWORK  True )
 set( QT_USE_QTXML      True )
 include( ${QT_USE_FILE} )

@@ -1,7 +1,7 @@
 
-find_package( Qt4 )
-set( QT_USE_QT_CORE True )
-include( ${QT_USE_FILE} )
+#find_package( Qt4 )
+#set( QT_USE_QT_CORE True )
+#include( ${QT_USE_FILE} )
 
 include_directories( "./src" 
                      ${LUA_INCLUDE_DIR}

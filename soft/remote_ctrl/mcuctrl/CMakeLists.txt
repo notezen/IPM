@@ -14,12 +14,12 @@ include_directories( "./src"
                      ${Boost_INCLUDE_DIRS} )
 if ( UNIX )
     include_directories( "${LIBUSB_1_INCLUDE_DIRS}" )
-    aux_source_directory( "./src/unix" s )
+    #aux_source_directory( "./src/unix" s )
 elseif ( WIN32 )
     include_directories( "${LIBUSB_INC_PATH}" 
                          "./src/libusb" )
 endif ( UNIX )
-set( src ${src} ${s} )
+#set( src ${src} ${s} )
 
 add_library( mcuctrl STATIC ${src} )
 if ( UNIX )

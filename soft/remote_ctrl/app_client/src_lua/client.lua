@@ -1,7 +1,7 @@
 
 require( "luajoyctrl" )
 require( "bit" )
---require( "movement15" )
+-- require( "movement15" )
 require( "movement50" )
 -- require( "debugger" )
 
@@ -26,7 +26,7 @@ function main()
     mov = Mover()
     
     -- ESCON controllers initialization.
-    --initEscon()
+    -- initEscon()
 
     while true do
         sleep( 0.1 )
@@ -52,7 +52,7 @@ function main()
         ]]
         
         
-        --print( "Before joysticks" )
+        -- print( "Before joysticks" )
         -- Process joysticks.
         if ( not DEBUG ) then
             joyProcess( valves )
@@ -60,9 +60,9 @@ function main()
         
         local zeroSpin = false
         local turn, fwd = joyVal( 1 )
-        --print( "fwd = " .. tostring( fwd ) )
+        -- print( "fwd = " .. tostring( fwd ) )
         if ( fwd < -JOY_TRESHOLD ) then
-            --pause()
+            -- pause()
             zeroSpin = true
             print( "Forward step" )
             res, err = pcall( mov.oneStepForward, mov )
@@ -78,12 +78,13 @@ function main()
                 print( err )
             end
         end
-        -- Process spinning
-       
-        --print( "Here 01" )
+        
+        -- Process spinning       
+        -- print( "Here 01" )
         if ( zeroSpin ) then
             turn = 0.0
         end
+        
         prevSpinDir = prevSpinDir or "idle"
         if ( turn > JOY_TRESHOLD ) then
             if ( prevSpinDir and prevSpinDir ~= "cw" ) then
@@ -113,17 +114,17 @@ function main()
             end
         end
 
-        --print( "Here 02" )
+        -- print( "Here 02" )
         -- Process manipulator.
         local hor, vert = joyVal( 3 )
 
-        --print( string.format( "hor = %s, ver = %s", tostring( hor ), tostring( vert ) ) )
-        --print( "Here 02.5" )
+        -- print( string.format( "hor = %s, ver = %s", tostring( hor ), tostring( vert ) ) )
+        -- print( "Here 02.5" )
         esconSetSpeed( 1, hor )
-        --print( "Here 02.75" )
+        -- print( "Here 02.75" )
         esconSetSpeed( 2, vert )
         
-        --print( "Here 03" )
+        -- print( "Here 03" )
         local hor, vert = joyVal( 4 )
         esconSetSpeed( 3, vert )
         
@@ -198,23 +199,26 @@ function setTemp( t )
 end
 
 function joyProcess( valves )
-    --print( "Entered joyProcess()" )
+    -- print( "Entered joyProcess()" )
     if ( not joystick ) then
-        --print( "one" )
-        local j = luajoyctrl.create()
-    j:open()
-    joystick = j
+      -- print( "one" )
+      local j = luajoyctrl.create()       
+      j:open()
+      joystick = j
     end
+    
     local j = joystick
-    --print( "two" )
+    -- print( "two" )
     if ( not j:isOpen() ) then
-        --print( "three" )
+        -- print( "three" )
         j:open()
     end
+    
     if ( not j:isOpen() ) then
         print( "ERROR: no joysticks board detected!" )
         return
     end
+    
     j:queryState()
     local adcX = {}
     local adcY = {}
@@ -225,9 +229,9 @@ function joyProcess( valves )
     stopBtn = j:stopBtn()
     
     
-    --print( string.format( "stopBtn: %s", stopBtn and "true" or "false" ) )
+    -- print( string.format( "stopBtn: %s", stopBtn and "true" or "false" ) )
 
-    --print( "Joystick table" )
+    -- print( "Joystick table" )
     joyValues = joyValues or {}
     for i=0, 3 do
         adcX[i+1]  = j:adcX( i )
@@ -328,9 +332,9 @@ end
 
 function esconSetSpeed( ind, val )
     if ( startStopEscon( ind, val ) ) then
-        --print( string.format( "setSpeed %s", tostring( val ) ) )
+        -- print( string.format( "setSpeed %s", tostring( val ) ) )
         local speed = joyToSpeed( val )
-        --print( "after joyToSpeed" )
+        -- print( "after joyToSpeed" )
         local stri = string.format( "escon:setSpeed( %i, %i )", ind, val )
         send( stri )
     end
@@ -338,6 +342,7 @@ end
 
 function joyVal( ind )
     if ( DEBUG ) then
+        -- virtual joystics
         local x, y = joy( ind )
         return x, y
     end

@@ -13,7 +13,31 @@
   <property name="windowTitle">
    <string>Remote control</string>
   </property>
-  <widget class="CameraWnd" name="view">
+  <widget class="QDockWidget" name="view1Dw">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>View1</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="CameraWnd" name="view1" native="true">
+      </widget>
+  </widget>
+  <widget class="QDockWidget" name="view2Dw">
+   <property name="features">
+    <set>QDockWidget::DockWidgetFloatable|QDockWidget::DockWidgetMovable</set>
+   </property>
+   <property name="windowTitle">
+    <string>View2</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>4</number>
+   </attribute>
+   <widget class="CameraWnd" name="view2" native="true">
+      </widget>
   </widget>
   <widget class="QDockWidget" name="cmdDw">
    <property name="sizePolicy">
@@ -105,7 +129,8 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="image"/>
+   <addaction name="video1"/>
+   <addaction name="video2"/>
    <addaction name="connect"/>
    <addaction name="exec"/>
    <addaction name="send"/>
@@ -148,16 +173,28 @@
     </layout>
    </widget>
   </widget>
-  <action name="image">
+  <action name="video1">
    <property name="icon">
     <iconset resource="images.qrc">
      <normaloff>:/images/camera.png</normaloff>:/images/camera.png</iconset>
    </property>
    <property name="text">
-    <string>Get image</string>
+    <string>Get video 1</string>
    </property>
    <property name="toolTip">
-    <string>Get image from attached web camera</string>
+    <string>Get video from ip camera 1</string>
+   </property>
+  </action>
+  <action name="video2">
+   <property name="icon">
+    <iconset resource="images.qrc">
+     <normaloff>:/images/camera.png</normaloff>:/images/camera.png</iconset>
+   </property>
+   <property name="text">
+    <string>Get video 2</string>
+   </property>
+   <property name="toolTip">
+    <string>Get video from ip camera 2</string>
    </property>
   </action>
   <action name="connect">

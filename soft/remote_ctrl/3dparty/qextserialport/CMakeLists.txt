@@ -1,5 +1,6 @@
 # Поиск и присоединение заголовков Qt.
 find_package( Qt4 )
+set( QT_USE_QTCORE    True )
 include( ${QT_USE_FILE} )
 
 # Собственные поддиректории заголовочных файлов.

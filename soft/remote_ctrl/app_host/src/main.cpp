@@ -1,11 +1,10 @@
 
-#include <QtGui>
+#include <QtCore>
 #include "lua.hpp"
 #include "host_qxmpp.h"
 #include "peer_qxmpp.h"
 #include "luamcuctrl.h"
 #include "luaprocess.h"
-#include "fsw_process.h"
 #include <boost/bind.hpp>
 
 bool g_acceptFiles = false;
@@ -41,8 +40,6 @@ static void init( lua_State * L )
 	luaopen_luamcuctrl( L );
 	// QProcess management.
 	luaopen_luaprocess( L );
-	// FswProcess management.
-	luaopen_luafsw( L );
 	// File acceptance function registration.
 	lua_register( L, "setAcceptFiles", ::setAcceptFiles );
 	// Execute file.

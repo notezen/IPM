@@ -44,7 +44,8 @@ private:
     QPointF m_joy1, m_joy2, m_joy3, m_joy4;
 public slots:
     void slotSend( const QString & stri );
-    void slotVideo();
+    void slotVideo1();
+    void slotVideo2();
     void slotConnect();
     void slotExec();
     void slotSendFile();

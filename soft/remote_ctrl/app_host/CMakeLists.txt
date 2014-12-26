@@ -1,15 +1,15 @@
 
-find_package( Qt4 )
-set( QT_USE_QTCORE     True )
-set( QT_USE_QTGUI      True )
-set( QT_USE_QTNETWORK  True )
-set( QT_USE_QTXML      True )
+find_package( Qt4 REQUIRED QtCore )
+#set( QT_USE_QTCORE     True )
+#set( QT_USE_QTGUI      True )
+#set( QT_USE_QTNETWORK  True )
+#set( QT_USE_QTXML      True )
 include( ${QT_USE_FILE} )
 
 set( Boost_USE_STATIC_LIBS True )
 set( Boost_USE_MULTITHREADED True )
 find_package( Boost COMPONENTS thread filesystem REQUIRED )
-find_package( Threads )
+#find_package( Threads )
 
 include_directories( "./src" 
                      "${ROOT}/peer_abst/src" 

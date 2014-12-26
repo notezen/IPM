@@ -10,7 +10,7 @@
 const std::string MainWnd::CLIENT_CONFIG_FILE = "client.ini";
 const int         MainWnd::LOG_MAX     = 256;
 const QString     MainWnd::VIDEO_CONFIG_FILE  = "video.ini";
-const QString MainWnd::VIDEO_DEFAULT_ADDR = "rtsp://192.0.0.35:554";
+const QString MainWnd::VIDEO_DEFAULT_ADDR = "v4l2:///dev/video0";
 
 MainWnd::MainWnd( QWidget * parent )
 : QMainWindow( parent )
@@ -39,7 +39,8 @@ MainWnd::MainWnd( QWidget * parent )
 
     m_valveTst = new ValveTst(this);
 
-    connect( ui.image,   SIGNAL(triggered()), this,       SLOT(slotVideo()) );
+    connect( ui.video1,   SIGNAL(triggered()), this,       SLOT(slotVideo1()) );
+    connect( ui.video2,   SIGNAL(triggered()), this,       SLOT(slotVideo2()) );
     connect( ui.connect, SIGNAL(triggered()), this,       SLOT(slotConnect()) );
     connect( ui.exec,    SIGNAL(triggered()), this,       SLOT(slotExec()) );
     connect( ui.send,    SIGNAL(triggered()), this,       SLOT(slotSendFile()) );
@@ -47,8 +48,6 @@ MainWnd::MainWnd( QWidget * parent )
     connect( ui.valve,   SIGNAL(triggered()), m_valveTst, SLOT(show()) );
 
     m_peer = new PeerQxmpp( CLIENT_CONFIG_FILE, boost::bind( &MainWnd::init, this, _1 ) );
-
-    slotVideo();
 }
 
 MainWnd::~MainWnd()
@@ -71,11 +70,17 @@ void MainWnd::slotLog( const QString & stri )
     ui.console->print( "\n" );
 }
 
-void MainWnd::slotVideo()
+void MainWnd::slotVideo1()
 {
     QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    m_videoUrl = s.value( "url", VIDEO_DEFAULT_ADDR ).toString();
-    ui.view->playFile( m_videoUrl );
+    m_videoUrl = s.value( "url1", VIDEO_DEFAULT_ADDR ).toString();
+    ui.view1->playFile( m_videoUrl );
+}
+void MainWnd::slotVideo2()
+{
+    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
+    m_videoUrl = s.value( "url2", VIDEO_DEFAULT_ADDR ).toString();
+    ui.view2->playFile( m_videoUrl );
 }
 
 void MainWnd::slotConnect()
@@ -162,7 +167,8 @@ void MainWnd::closeEvent( QCloseEvent *event)
     event->accept();
 
     QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    s.setValue( "url", m_videoUrl );
+    s.setValue( "url1", m_videoUrl );
+    s.setValue( "url2", m_videoUrl );
 }
 
 
