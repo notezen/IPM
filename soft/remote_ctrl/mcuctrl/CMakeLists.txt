@@ -1,9 +1,19 @@
 
-set( Boost_USE_STATIC_LIBS True )
+#set( Boost_USE_STATIC_LIBS True )
 set( Boost_USE_MULTITHREADED True )
 find_package( Boost COMPONENTS regex REQUIRED )
 
-aux_source_directory( "./src" src )
+set ( USB_EMULATION True )
+
+set( src ./src/mcu_ctrl.cpp)
+if ( USB_EMULATION )
+  add_definitions( -DEMUL )
+  set( src ${src} ./src/emul_usb_io.cpp )
+else ( USB_EMULATION )
+  set( src ${src} ./src/usb_io.cpp )
+endif ( USB_EMULATION )
+
+#aux_source_directory( "./src" src )
 message( STATUS "src: \"${src}\"" )
 
 include( "${ROOT}/3dparty/cmake/findlibusb-1.0.cmake" )
@@ -22,6 +32,7 @@ endif ( UNIX )
 #set( src ${src} ${s} )
 
 add_library( mcuctrl STATIC ${src} )
+
 if ( UNIX )
     target_link_libraries( mcuctrl ${LIBUSB_1_LIBRARIES} ${Boost_LIBRARIES} )
 elseif ( WIN32 )

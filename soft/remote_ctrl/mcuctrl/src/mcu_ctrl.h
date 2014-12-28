@@ -2,7 +2,11 @@
 #ifndef __MCU_CTRL_H_
 #define __MCU_CTRL_H_
 
-#include "usb_io.h"
+#ifdef EMUL
+    #include "emul_usb_io.h"
+#else
+    #include "usb_io.h"
+#endif
 
 class McuCtrl: public UsbIo
 {
