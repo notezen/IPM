@@ -3,7 +3,7 @@ find_package( Qt4 )
 set( QT_USE_QTCORE     True )
 include( ${QT_USE_FILE} )
 
-set( Boost_USE_STATIC_LIBS True )
+#set( Boost_USE_STATIC_LIBS True )
 set( Boost_USE_MULTITHREADED True )
 find_package( Boost COMPONENTS thread filesystem date_time REQUIRED )
 find_package( Threads )

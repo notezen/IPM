@@ -6,7 +6,7 @@ set( QT_USE_QTNETWORK  True )
 set( QT_USE_QTXML      True )
 include( ${QT_USE_FILE} )
 
-set( Boost_USE_STATIC_LIBS True )
+#set( Boost_USE_STATIC_LIBS True )
 set( Boost_USE_MULTITHREADED True )
 find_package( Boost COMPONENTS thread filesystem REQUIRED )
 find_package( Threads )
