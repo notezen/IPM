@@ -100,8 +100,8 @@ bool HostQxmpp::listen( const std::string & configFile )
     if ( !pd->parseConfig( configFile ) )
         return false;
     pd->server.setDomain( pd->domain );
-    pd->logger.setLoggingType( QXmppLogger::StdoutLogging );
-    pd->server.setLogger( &(pd->logger) );
+    //pd->logger.setLoggingType( QXmppLogger::StdoutLogging );
+    //pd->server.setLogger( &(pd->logger) );
     pd->server.setPasswordChecker( pd );
     pd->server.listenForClients();
     pd->server.listenForServers();
