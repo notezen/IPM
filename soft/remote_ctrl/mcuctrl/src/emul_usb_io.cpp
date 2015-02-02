@@ -51,6 +51,9 @@ int UsbIo::write( const std::string & stri )
         for_read.insert(0, inp.str());
     else
     {
+        if(stri.compare("status\r\n")==0)
+            for_read.assign("ok:{0}<\r\n");
+
         std::cout<<"emul_usb_io WRITE: ";
         std::cout<<stri;
     }
