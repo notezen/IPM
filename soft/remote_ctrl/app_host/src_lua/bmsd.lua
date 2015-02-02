@@ -60,12 +60,12 @@ function BMSD:i2cIo( cmd, addr, arg, crc, mirror, invert )
     arg = arg or 0
     local t = { HEADER, addr, cmd, arg }
     local c = crc or crcMsg( t )
-    print( "one" )
+    -- print( "one" )
     t[5] = c
-    display( unpack( t ) )
+    -- display( unpack( t ) )
     local mcu = self.mcu
     mcu:i2cSetAddr( I2C_ADDR )
-    print( "two" )
+    -- print( "two" )
     if ( mirror ) then
         for i=1, #t do
             t[i] = mirrorBits( t[i] )
@@ -77,9 +77,9 @@ function BMSD:i2cIo( cmd, addr, arg, crc, mirror, invert )
         end        
     end
     mcu:i2cSetBuf( 0, I2C_CMD_BMSD, unpack( t ) )
-    print( "three" )
+    -- print( "three" )
     mcu:i2cIo( 6, 0 )
-    print( "four" )
+    -- print( "four" )
     while true do
         local res, val = mcu:i2cStatus()
         if ( res ) then
@@ -92,9 +92,9 @@ function BMSD:i2cIo( cmd, addr, arg, crc, mirror, invert )
         end
         sleep( 0.1 )
     end
-    print( "five" )
+    -- print( "five" )
     send( "print( \'Error: I2C io error BMSD IO\' )" )
-    print( "six" )
+    -- print( "six" )
     return false
 end
 

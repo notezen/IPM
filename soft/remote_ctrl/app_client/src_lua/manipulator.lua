@@ -1,6 +1,7 @@
 require( "joystick" )
 
 local escon_started = {}
+local values = {0,0,0,0}
 
 function initEscon()
     send( "escon:setSpeed( 1, 0 )" )
@@ -32,17 +33,20 @@ function startStopEscon( ind, val )
         if ( escon_started[ ind ] ) then
             escon_started[ ind ] = false
             send( string.format( "escon:stop( %i )", ind ) )
+            values[ind] = 0
         end
     end
     return false
 end
 
 function esconSetSpeed( ind, val )
-    if ( startStopEscon( ind, val ) ) then
+    if ( startStopEscon( ind, val ) and values[ind] ~= val ) then
         -- print( string.format( "setSpeed %s", tostring( val ) ) )
         local speed = joyToSpeed( val )
         -- print( "after joyToSpeed" )
         local stri = string.format( "escon:setSpeed( %i, %i )", ind, val )
         send( stri )
+        
+        values[ind] = val
     end
 end

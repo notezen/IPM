@@ -24,12 +24,12 @@ function main()
     mov = Mover()
     
     -- ESCON controllers initialization.
-    -- initEscon()
+    initEscon()
 
     while true do
         sleep( 0.1 )
-        --[[
-        if ( not DEBUG ) then
+        -- [[
+        -- if ( not DEBUG ) then
             -- Valve test window outputs query
             for i=1, BOARDS_CNT do
                 local valve = valveOutputs( i-1 )
@@ -46,8 +46,8 @@ function main()
                     break
                 end
             end
-        end
-        ]]
+        -- end
+        -- ]]
         
         
         -- print( "Before joysticks" )
