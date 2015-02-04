@@ -18,12 +18,12 @@ function ESCON:i2cIo( addr, ... )
     local mcu = self.mcu
     local res = mcu:i2cSetAddr( addr )
     if ( not res ) then
-        display( "ESCON ERROR: failsed to sed I2C address = " .. tostring( addr ) )
+        display( "ESCON Error: failsed to sed I2C address = " .. tostring( addr ) )
         return false
     end
     res = mcu:i2cSetBuf( 0, unpack( t ) )
     if ( not res ) then
-        display( "ESCON ERROR: failsed to sed I2C buffer" )
+        display( "ESCON Error: failsed to sed I2C buffer" )
         return false
     end
     mcu:i2cIo( cnt, 0 )

@@ -5,11 +5,18 @@ require( "bmsd" )
 require( "escon" )
 
 function display( ... )
-    local t = { ... }
+  local t = { ... }
+  if ( #t > 1 ) then
     for i=1, #t do
-        local stri = string.format( "print( \'arg[%i] = %s\' )", i, tostring( t[i] ) )
-	send( stri )
+       local stri = string.format( "print( \'arg[%i] = %s\' )", i, tostring( t[i] ) )
+	     send( stri )
     end
+  end
+  
+  if ( #t == 1 ) then
+    local stri = string.format( "print( \'%s\' )", tostring( t[1] ) )
+    send( stri )
+  end
 end
 
 local BOARDS_CNT = 3
@@ -49,7 +56,7 @@ function setValves( vals )
 end
 
 function remoteInvokeInputs( vals )
-    local stri = "send( setInputs( { "
+    local stri = "setInputs( { "
     local cnt = #vals
     for i=1, cnt do
         stri = stri .. tostring( vals[i] or 0 )
@@ -59,7 +66,7 @@ function remoteInvokeInputs( vals )
             stri = stri .. " "
         end
     end
-    stri = stri .. "} ) )"
+    stri = stri .. "} )"
     send( stri )
 end
 

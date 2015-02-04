@@ -84,7 +84,7 @@ function BMSD:i2cIo( cmd, addr, arg, crc, mirror, invert )
         local res, val = mcu:i2cStatus()
         if ( res ) then
             if ( val == 0 ) then
-                send( "print( \'I2C send sucess\' )" )
+                display( "BMSD: I2C send sucess" )
                 return true
             end
         else
@@ -93,7 +93,7 @@ function BMSD:i2cIo( cmd, addr, arg, crc, mirror, invert )
         sleep( 0.1 )
     end
     -- print( "five" )
-    send( "print( \'Error: I2C io error BMSD IO\' )" )
+    display( "BMSD Error: I2C io error" )
     -- print( "six" )
     return false
 end
@@ -104,7 +104,7 @@ function BMSD:enumCrc( cmd, arg, mirror, invert )
         display( string.format( "%s, CRC = %2x", tostring( res ), i ) )
         sleep( 1.1 )
     end
-    display( "Crc enumeration is finished" )
+    display( "BMSD: Crc enumeration is finished" )
 end
 
 function BMSD:setAddr( addr )
@@ -144,26 +144,26 @@ function BMSD:move( speed, acc, decc )
 
     local res = self:i2cIo( 0xA7, 0x00, dir )
     if ( not res ) then
-        send( "print( \'Error: BMSD dir\' )" )
+        display( "Error: BMSD dir" )
     return false
     end
     sleep( 0.5 )
 
     res = self:i2cIo( 0xA3, 0x00, speed )
     if ( not res ) then
-        send( "print( \'Error: BMSD speed\' )" )
+        display( "Error: BMSD speed" )
     end
     sleep( 0.5 )
 
     res = self:i2cIo( 0xA5, 0x00, acc )
     if ( not res ) then
-        send( "print( \'Error: BMSD speed\' )" )
+        display( "Error: BMSD speed" )
     end
     sleep( 0.5 )
  
     res = self:i2cIo( 0xA6, 0x00, decc )
     if ( not res ) then
-        send( "print( \'Error: BMSD speed\' )" )
+       display( "Error: BMSD speed" )
     end
     sleep( 0.5 )
  

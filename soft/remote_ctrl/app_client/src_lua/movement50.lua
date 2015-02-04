@@ -46,7 +46,7 @@ end
 
 -- To initialized state.
 function Mover:stToInit()
-    print( "Going to initial position..." )
+    print( "Going to initial position ..." )
     local dt = 1.3
     sleep( dt )
     remoteInvokeOutputs( { 0, SIDES_DOWN_2, FORWARD_3 + CENTER_DOWN_3 } )
@@ -58,6 +58,8 @@ end
 
 
 function Mover:oneStepForward()
+    print( "Forward step ..." )
+
     local dt = 1.2
     sleep( dt )
     remoteInvokeOutputs( { CENTER_ON_1, CENTER_ON_2 + SIDES_DOWN_2, 0 } )
@@ -84,6 +86,8 @@ function Mover:oneStepForward()
 end
 
 function Mover:oneStepBackward()
+    print( "Backward step ..." )
+
     local dt = 1.2
     sleep( dt )
     --print( "SIDES on, FORWARD" )

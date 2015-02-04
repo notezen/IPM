@@ -62,7 +62,6 @@ function main()
         if ( fwd < -JOY_TRESHOLD ) then
             -- pause()
             zeroSpin = true
-            print( "Forward step" )
             res, err = pcall( mov.oneStepForward, mov )
             if ( not res ) then
                 print( err )
@@ -70,7 +69,6 @@ function main()
         elseif ( fwd > JOY_TRESHOLD ) then
             --pause()
             zeroSpin = true
-            print( "Backward step" )
             res, err = pcall( mov.oneStepBackward, mov )
             if ( not res ) then
                 print( err )
@@ -86,25 +84,16 @@ function main()
         prevSpinDir = prevSpinDir or "idle"
         if ( turn > JOY_TRESHOLD ) then
             if ( prevSpinDir and prevSpinDir ~= "cw" ) then
-                if ( DEBUG ) then
-                    print( "cw" )
-                end
                 prevSpinDir = "cw"
                 spin_clockwise()
             end
         elseif ( turn < -JOY_TRESHOLD ) then
             if ( prevSpinDir and prevSpinDir ~= "ccw" ) then
-                if ( DEBUG ) then
-                    print( "ccw" )
-                end
                 prevSpinDir = "ccw"
                 spin_counterclockwise()
             end
         else
             if ( prevSpinDir and prevSpinDir ~= "idle" ) then
-                if ( DEBUG ) then
-                    print( "idle" )
-                end
                 prevSpinDir = "idle"
                 spin_stop()
             end
@@ -160,7 +149,7 @@ function sleep( t, mask, stri )
 end
 
 function remoteInvokeOutputs( vals )
-    local stri = "send( setValves( { "
+    local stri = "setValves( { "
     local cnt = #vals
     for i=1, cnt do
         stri = stri .. tostring( vals[i] or 0 )
@@ -170,8 +159,16 @@ function remoteInvokeOutputs( vals )
             stri = stri .. " "
         end
     end
-    stri = stri .. "} ) )"
-    send( stri )
+    stri = stri .. "} )"
+    cmd( stri )
+end
+
+function cmd( str )
+  if ( DEBUG ) then
+    print( str )
+  end
+  
+  send( str )
 end
 
 -- calls from HOST
