@@ -16,6 +16,8 @@
 
 UsbIo::UsbIo()
 {
+    for(int i=0;i<3;i++)
+        inputs[i]=1;
 }
 
 UsbIo::~UsbIo()
@@ -41,14 +43,15 @@ bool UsbIo::isOpen() const
 int UsbIo::write( const std::string & stri )
 {
     std::ostringstream inp;
-    int i = 1;
 
     for_read.assign(stri);
 
-    inp<<"{1 1 " << i << "}";
+    inp<<"{"<< inputs[0] << " "<< inputs[1] <<" "<< inputs[2] << "}";
 
     if(stri.compare("st\r\n")==0)
+    {
         for_read.insert(0, inp.str());
+    }
     else
     {
         if(stri.compare("status\r\n")==0)
@@ -56,6 +59,8 @@ int UsbIo::write( const std::string & stri )
 
         std::cout<<"emul_usb_io WRITE: ";
         std::cout<<stri;
+
+        inputs[0]++;
     }
 
     return stri.size();

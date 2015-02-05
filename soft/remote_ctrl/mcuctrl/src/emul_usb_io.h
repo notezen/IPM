@@ -21,6 +21,7 @@ public:
     void msleep( int ms );
 private:
     std::string for_read;
+    int inputs[3];
 };
 
 #endif
