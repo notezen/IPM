@@ -38,7 +38,8 @@ private:
     static const QString     VIDEO_CONFIG_FILE;
     static const QString     VIDEO_DEFAULT_ADDR;
 
-    QString                  m_videoUrl;
+    QString                  m_videoUrl1;
+    QString                  m_videoUrl2;
 
     QMutex mutex;
     QPointF m_joy1, m_joy2, m_joy3, m_joy4;

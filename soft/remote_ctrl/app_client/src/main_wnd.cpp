@@ -48,6 +48,10 @@ MainWnd::MainWnd( QWidget * parent )
     connect( ui.valve,   SIGNAL(triggered()), m_valveTst, SLOT(show()) );
 
     m_peer = new PeerQxmpp( CLIENT_CONFIG_FILE, boost::bind( &MainWnd::init, this, _1 ) );
+
+    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
+    m_videoUrl1 = s.value( "url1", VIDEO_DEFAULT_ADDR ).toString();
+    m_videoUrl2 = s.value( "url2", VIDEO_DEFAULT_ADDR ).toString();
 }
 
 MainWnd::~MainWnd()
@@ -72,15 +76,11 @@ void MainWnd::slotLog( const QString & stri )
 
 void MainWnd::slotVideo1()
 {
-    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    m_videoUrl = s.value( "url1", VIDEO_DEFAULT_ADDR ).toString();
-    ui.view1->playFile( m_videoUrl );
+    ui.view1->playFile( m_videoUrl1 );
 }
 void MainWnd::slotVideo2()
 {
-    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    m_videoUrl = s.value( "url2", VIDEO_DEFAULT_ADDR ).toString();
-    ui.view2->playFile( m_videoUrl );
+    ui.view2->playFile( m_videoUrl2 );
 }
 
 void MainWnd::slotConnect()
@@ -165,10 +165,6 @@ void MainWnd::slotJoyChanged( QPointF v, bool mouseDown )
 void MainWnd::closeEvent( QCloseEvent *event)
 {
     event->accept();
-
-    QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
-    s.setValue( "url1", m_videoUrl );
-    s.setValue( "url2", m_videoUrl );
 }
 
 
