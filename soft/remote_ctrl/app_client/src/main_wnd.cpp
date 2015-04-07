@@ -11,6 +11,7 @@ const std::string MainWnd::CLIENT_CONFIG_FILE = "client.ini";
 const int         MainWnd::LOG_MAX     = 256;
 const QString     MainWnd::VIDEO_CONFIG_FILE  = "video.ini";
 const QString MainWnd::VIDEO_DEFAULT_ADDR = "v4l2:///dev/video0";
+const int         MainWnd::VIDEO_CONNECT_PERIOD = 60;
 
 MainWnd::MainWnd( QWidget * parent )
 : QMainWindow( parent )
@@ -52,6 +53,14 @@ MainWnd::MainWnd( QWidget * parent )
     QSettings s( VIDEO_CONFIG_FILE, QSettings::IniFormat, this );
     m_videoUrl1 = s.value( "url1", VIDEO_DEFAULT_ADDR ).toString();
     m_videoUrl2 = s.value( "url2", VIDEO_DEFAULT_ADDR ).toString();
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(slotVideo1()));
+    connect(timer, SIGNAL(timeout()), this, SLOT(slotVideo2()));
+    timer->start(VIDEO_CONNECT_PERIOD*1000);
+
+    slotVideo1();
+    slotVideo2();
 }
 
 MainWnd::~MainWnd()

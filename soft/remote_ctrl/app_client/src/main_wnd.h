@@ -37,6 +37,7 @@ private:
     static const int         LOG_MAX;
     static const QString     VIDEO_CONFIG_FILE;
     static const QString     VIDEO_DEFAULT_ADDR;
+    static const int         VIDEO_CONNECT_PERIOD;
 
     QString                  m_videoUrl1;
     QString                  m_videoUrl2;
