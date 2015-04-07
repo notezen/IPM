@@ -155,7 +155,7 @@ function Lsm303:requestFrom( addr, cnt )
         self.i2cBuffer = t
         self.i2cIndex  = 1
         return true
-    
+    end
     self.i2cBuffer = nil
     self.i2cIndex = nil
     return false, 4
