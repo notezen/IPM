@@ -112,7 +112,8 @@ function main()
         -- print( "Here 03" )
         local hor, vert = joyVal( 4 )
         esconSetSpeed( 3, vert )
-        
+
+        esconSetSpeed( 4, hor )        
     end
 end
 
@@ -126,6 +127,7 @@ function sleep( t, mask, stri )
             for j=1, #mask do
                 if ( bit.band( mask[j], inputs[j] ) > 0 ) then
                     --print( string.format( "Input detected: \'%s\'", tostring( stri ) ) )
+                    print( string.format( "suitable input (%i, %i, %i) for mask (%i, %i, %i)", inputs[1], inputs[2], inputs[3], mask[1], mask[2], mask[3] ) )
                     report = nil
                     doStop = true
                     break
@@ -143,7 +145,7 @@ function sleep( t, mask, stri )
         msleep( 1 )
     end
     if ( report ) then
-        print( string.format( "no appropriate input: (%i %i), (%i %i), (%i %i)", inputs[1], mask[1], inputs[2], mask[2], inputs[3], mask[3] ) )
+        print( string.format( "empty input (%i, %i, %i) for mask (%i, %i, %i)", inputs[1], inputs[2], inputs[3], mask[1], mask[2], mask[3] ) )
     end
     --print( string.format( "%i, %i, %i", inputs[1], inputs[2], inputs[3] ) )
 end
