@@ -24,7 +24,9 @@ function main()
     mov = Mover()
     
     -- ESCON controllers initialization.
-    initEscon()
+    -- initEscon()
+    
+    prevBtn = false
 
     while true do
         sleep( 0.1 )
@@ -52,68 +54,80 @@ function main()
         
         -- print( "Before joysticks" )
         -- Process joysticks.
-        if ( not DEBUG ) then
-            joyProcess( valves )
-        end
-        
-        local zeroSpin = false
-        local turn, fwd = joyVal( 1 )
-        -- print( "fwd = " .. tostring( fwd ) )
-        if ( fwd < -JOY_TRESHOLD ) then
-            -- pause()
-            zeroSpin = true
-            res, err = pcall( mov.oneStepForward, mov )
-            if ( not res ) then
-                print( err )
-            end
-        elseif ( fwd > JOY_TRESHOLD ) then
-            --pause()
-            zeroSpin = true
-            res, err = pcall( mov.oneStepBackward, mov )
-            if ( not res ) then
-                print( err )
-            end
-        end
-        
-        -- Process spinning       
-        -- print( "Here 01" )
-        if ( zeroSpin ) then
-            turn = 0.0
-        end
-        
-        prevSpinDir = prevSpinDir or "idle"
-        if ( turn > JOY_TRESHOLD ) then
-            if ( prevSpinDir and prevSpinDir ~= "cw" ) then
-                prevSpinDir = "cw"
-                spin_clockwise()
-            end
-        elseif ( turn < -JOY_TRESHOLD ) then
-            if ( prevSpinDir and prevSpinDir ~= "ccw" ) then
-                prevSpinDir = "ccw"
-                spin_counterclockwise()
-            end
-        else
-            if ( prevSpinDir and prevSpinDir ~= "idle" ) then
-                prevSpinDir = "idle"
-                spin_stop()
-            end
-        end
+        joyProcess( valves )
+                
+        if ( joyBtn() ) then
+          if ( prevBtn ~= true ) then
+              prevBtn = true
+              stopEscon()
+          end
+                
+          local zeroSpin = false
+          local turn, fwd = joyVal( 1 )
+          -- print( "fwd = " .. tostring( fwd ) )
+          if ( fwd < -JOY_TRESHOLD ) then
+              -- pause()
+              zeroSpin = true
+              res, err = pcall( mov.oneStepForward, mov )
+              if ( not res ) then
+                  print( err )
+              end
+          elseif ( fwd > JOY_TRESHOLD ) then
+              --pause()
+              zeroSpin = true
+              res, err = pcall( mov.oneStepBackward, mov )
+              if ( not res ) then
+                  print( err )
+              end
+          end
+          
+          -- Process spinning       
+          -- print( "Here 01" )
+          if ( zeroSpin ) then
+              turn = 0.0
+          end
+          
+          prevSpinDir = prevSpinDir or "idle"
+          if ( turn > JOY_TRESHOLD ) then
+              if ( prevSpinDir and prevSpinDir ~= "cw" ) then
+                  prevSpinDir = "cw"
+                  spin_clockwise()
+              end
+          elseif ( turn < -JOY_TRESHOLD ) then
+              if ( prevSpinDir and prevSpinDir ~= "ccw" ) then
+                  prevSpinDir = "ccw"
+                  spin_counterclockwise()
+              end
+          else
+              if ( prevSpinDir and prevSpinDir ~= "idle" ) then
+                  prevSpinDir = "idle"
+                  spin_stop()
+              end
+          end
 
-        -- print( "Here 02" )
-        -- Process manipulator.
-        local hor, vert = joyVal( 3 )
+        else        
+          if ( prevBtn ~= false ) then
+              prevBtn = false
+              spin_stop()
+          end
 
-        -- print( string.format( "hor = %s, ver = %s", tostring( hor ), tostring( vert ) ) )
-        -- print( "Here 02.5" )
-        esconSetSpeed( 1, hor )
-        -- print( "Here 02.75" )
-        esconSetSpeed( 2, vert )
-        
-        -- print( "Here 03" )
-        local hor, vert = joyVal( 4 )
-        esconSetSpeed( 3, vert )
+          -- print( "Here 02" )
+          -- Process manipulator.
+          local hor, vert = joyVal( 3 )
+  
+          -- print( string.format( "hor = %s, ver = %s", tostring( hor ), tostring( vert ) ) )
+          -- print( "Here 02.5" )
+          esconSetSpeed( 1, hor )
+          -- print( "Here 02.75" )
+          esconSetSpeed( 2, vert )
+          
+          -- print( "Here 03" )
+          local hor, vert = joyVal( 4 )
+          esconSetSpeed( 3, vert )
+  
+          esconSetSpeed( 4, hor )        
 
-        esconSetSpeed( 4, hor )        
+        end
     end
 end
 

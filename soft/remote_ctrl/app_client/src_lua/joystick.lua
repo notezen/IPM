@@ -2,8 +2,24 @@
 require( "luajoyctrl" )
 
 JOY_TRESHOLD = 25
+stopBtn = false
 
 function joyProcess( valves )
+    -- print( "Joystick table" )
+    joyValues = joyValues or {}
+
+
+  if ( DEBUG ) then
+    for i=1, 4 do
+        -- virtual joystics
+        -- joy - get values from client gui
+        local x, y = joy( i )
+        joyValues[ i ] = { x = x, y = y }
+    end
+    
+    return
+  end
+  
     -- print( "Entered joyProcess()" )
     if ( not joystick ) then
       -- print( "one" )
@@ -29,15 +45,9 @@ function joyProcess( valves )
     local adcY = {}
     local nullX = {}
     local nullY = {}
-    local stopBtn
 
     stopBtn = j:stopBtn()
-    
-    
-    -- print( string.format( "stopBtn: %s", stopBtn and "true" or "false" ) )
-
-    -- print( "Joystick table" )
-    joyValues = joyValues or {}
+        
     for i=0, 3 do
         adcX[i+1]  = j:adcX( i )
         adcY[i+1]  = j:adcY( i )
@@ -102,12 +112,10 @@ function joyToSpeed( val )
 end
 
 function joyVal( ind )
-    if ( DEBUG ) then
-        -- virtual joystics
-        local x, y = joy( ind )
-        return x, y
-    end
-    
-    x, y = joyValues[ ind ].x, joyValues[ ind ].y
-    return x, y
+    return joyValues[ ind ].x, joyValues[ ind ].y
+end
+
+function joyBtn()
+  -- print( string.format( "stopBtn: %s", stopBtn and "true" or "false" ) )
+  return stopBtn
 end

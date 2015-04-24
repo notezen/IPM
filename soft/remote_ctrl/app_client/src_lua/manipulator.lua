@@ -19,6 +19,15 @@ function initEscon()
     cmd( "escon:start( 4 )" )
 end
 
+function stopEscon()
+  print("stop manipulator ...")
+
+    cmd( "escon:stop( 1 )" )
+    cmd( "escon:stop( 2 )" )
+    cmd( "escon:stop( 3 )" )
+    cmd( "escon:stop( 4 )" )
+end
+
 function startStopEscon( ind, val )
     -- print( string.format( "ind = %s, val = %s", tostring(ind), tostring(val) ) )
     if ( math.abs( val ) > JOY_TRESHOLD ) then
